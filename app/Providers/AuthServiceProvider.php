@@ -10,6 +10,8 @@ use Carbon\Carbon;
 
 use App\Role;
 
+use Illuminate\Support\Facades\Schema;
+
 use Illuminate\Support\Facades\Log;
 
 class AuthServiceProvider extends ServiceProvider
@@ -32,12 +34,12 @@ class AuthServiceProvider extends ServiceProvider
     {
         $this->registerPolicies();
 
-        $scopes = Role::all()->pluck('desc', 'slug')->toArray();
-
-        // Log::info('$roles');
-        // Log::info($roles);
-
-        Passport::tokensCan($scopes);
+        if (Schema::hasTable('roles')) {
+            $scopes = Role::all()->pluck('desc', 'slug')->toArray();
+            // Log::info('$roles');
+            // Log::info($roles);
+            Passport::tokensCan($scopes);
+        }
 
         Passport::routes();
 
